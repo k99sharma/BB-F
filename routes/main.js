@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
 
+
 // models
 const User = require('../models/users');
 
@@ -12,6 +13,7 @@ const userExists = async (req, res, next) => {
    const user = await User.findOne({username, email});
    if(user){
       console.log('User already exists');
+      req.flash('error', 'Username and email already in use!');
       return res.redirect('/bluebird/register');
    }
    else
@@ -48,22 +50,25 @@ router.post('/login', async (req, res)=>{
    const user = await User.findOne({username, category})
 
    if(user){
-      console.log('User found');
+      //console.log('User found');
       const isPasswordCorrect = await bcrypt.compare(password, user.password);
       if(isPasswordCorrect){
          console.log('Password is correct');
          req.session.user_id = user._id;
          req.session.user = user;
+         req.flash('success', 'Successfully logged in!');
          res.redirect(`/bluebird/${categoryRedirect(category)}`);
       }
 
       else{
-         console.log('Password is incorrect');
+         console.log('Password is in correct');
+         req.flash('success', 'Wrong Credentials');
          res.redirect('/bluebird/login');
       }
    }
    else{
       console.log('User not found');
+      req.flash('error', 'User not available!');
       res.redirect('/bluebird/login');
    }
 
@@ -78,6 +83,7 @@ router.get('/register', (req, res)=>{
 
 // POST register page
 router.post('/register', userExists, async (req, res)=>{
+
    const {firstName, lastName, username, email, password, category} = req.body;
 
    // creating hash of password
@@ -99,12 +105,14 @@ router.post('/register', userExists, async (req, res)=>{
           console.log('User Created!');
           req.session.user_id = new_user._id;
           req.session.user = new_user;
+          req.flash('success', 'Successfully Registered');
           res.redirect(`/bluebird/${categoryRedirect(category)}`);
 
        })
        .catch(err => {
           console.log('User cannot be created!');
           console.log(err);
+          req.flash('error', 'Registration failed!');
           res.redirect('/bluebird/register');
        })
 });
