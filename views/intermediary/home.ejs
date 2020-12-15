@@ -22,6 +22,75 @@
             Welcome, <%= user.firstName %> <%= user.lastName %>
         </div>
 
+        <!-- new appointment button -->
+        <div class="container m-3">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newAppointment">
+                Make Appointment
+            </button>
+
+           <!-- appointment modal -->
+            <div class="modal fade" id="newAppointment" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Make New Appointment</h5>
+                        </div>
+                        <div class="modal-body">
+                            <!-- appointment form -->
+                            <form action="/bluebird/intermediary/newAppointment/<%= user._id %>" method="POST">
+                                <div class="mb-3">
+                                    <label for="firstName" class="form-label">First Name</label>
+                                    <input type="text" class="form-control" id="firstName" name="firstName" placeholder="First Name" required>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="lastName" class="form-label">Last Name</label>
+                                    <input type="text" class="form-control" id="lastName" name="lastName" placeholder="Last Name" required>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">Email Address</label>
+                                    <input type="email" class="form-control" id="email" name="email" placeholder="example@email.com" required>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="contact" class="form-label">Contact Number</label>
+                                    <input type="text" class="form-control" id="contact" name="contact" placeholder="Contact Number" required>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="address" class="form-label">Address</label>
+                                    <input type="text" class="form-control" id="address" name="address" placeholder="Address" required>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="symptoms" class="form-label">Symptoms</label>
+                                    <textarea class="form-control" id="symptoms" name="symptoms" cols="30" rows="4"></textarea>
+                                </div>
+
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" name="bluebirdAccount" id="bluebirdAccount">
+                                    <label class="form-check-label" for="bluebirdAccount">
+                                        Bluebird Account
+                                    </label>
+                                </div>
+
+                                <div class="mb-3">
+                                    <button type="submit" class="btn btn-success">Make</button>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                </div>
+                            </form> <!-- appointment form ends here -->
+                        </div>
+                    </div>
+                </div>
+            </div><!-- appointment modal ends here -->
+        </div><!-- appointment container ends here -->
+
+        <!-- show appointments -->
+        <div class="container m-3">
+            <a href="/bluebird/intermediary/appointment/show" class="btn btn-primary">Show Appointments</a>
+        </div>
+
         <div class="container m-3">
             <a href="/bluebird/logout" class="btn btn-danger">Logout</a>
         </div>

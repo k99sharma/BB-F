@@ -6,6 +6,7 @@ const logger = require('morgan');
 const mongoose = require('mongoose');
 const session = require('express-session');
 const flash = require('connect-flash');
+const methodOverride = require('method-override');
 
 
 // mongodb database
@@ -23,6 +24,8 @@ mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
 // getting routes
 const mainRouter = require('./routes/main');
 const intermediaryRouter = require('./routes/intermediary');
+const doctorRouter = require('./routes/doctor');
+const patientRouter = require('./routes/patient');
 
 // express app
 const app = express();
@@ -46,6 +49,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(flash());
+app.use(methodOverride('_method'));
 
 // flash middleware
 app.use((req, res, next)=>{
@@ -58,6 +62,8 @@ app.use((req, res, next)=>{
 // Routes Setting
 app.use('/bluebird', mainRouter);
 app.use('/bluebird/intermediary', intermediaryRouter);
+app.use('/bluebird/doctor', doctorRouter);
+app.use('/bluebird/patient', patientRouter);
 
 
 // catch 404 and forward to error handler
