@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const creationInfo = require('../models/schemaPlugins');
 const Schema = mongoose.Schema;
 
-const userSchema = new Schema({
+const intermediarySchema = new Schema({
     firstName : {
         type: String,
         required: true
@@ -23,15 +23,14 @@ const userSchema = new Schema({
         type: String,
         required: true
     },
-    category: {
-        type: String,
-        required: true
-    }
+    appointments: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Appointment'
+    }]
 });
 
-// adding plugin to the schema
-userSchema.plugin(creationInfo);
+intermediarySchema.plugin(creationInfo);
 
-const User = mongoose.model('user', userSchema);
+const Intermediary = mongoose.model('Intermediary', intermediarySchema, 'intermediaries');
 
-module.exports = User;
+module.exports = Intermediary;

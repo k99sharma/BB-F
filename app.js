@@ -11,7 +11,7 @@ const methodOverride = require('method-override');
 
 // mongodb database
 const dbURI = 'mongodb://localhost:27017/BB-F';              // db url string
-mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false })
     .then(()=>{
       console.log('Database is connected!');
     })

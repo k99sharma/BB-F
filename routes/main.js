@@ -4,21 +4,40 @@ const bcrypt = require('bcrypt');
 
 
 // models
-const User = require('../models/users');
+
+const Intermediary = require('../models/intermediary');
+const Doctor = require('../models/doctor');
+
 
 // middleware to check before registration if a user already exists or not
-const userExists = async (req, res, next) => {
+const intermediaryExists = async (req, res, next) => {
    const { username, email } = req.body;
 
-   const user = await User.findOne({username, email});
-   if(user){
-      console.log('User already exists');
+   const intermediary = await Intermediary.findOne({username, email});
+   if(intermediary){
+      console.log('Intermediary already exists');
       req.flash('error', 'Username and email already in use!');
       return res.redirect('/bluebird/register');
    }
    else
       next();
 }
+
+
+const doctorExists = async (req, res, next) => {
+   const { username, email } = req.body;
+
+   const doctor = await Doctor.findOne({username, email});
+   if(doctor){
+      console.log('Doctor already exists');
+      req.flash('error', 'Username and email already in use!');
+      return res.redirect('/bluebird/register');
+   }
+   else
+      next();
+}
+
+
 
 // category redirect function
 const categoryRedirect = (category)=>{
@@ -39,18 +58,30 @@ router.get('/', (req, res)=>{
 });
 
 
+// --------------------- Login Part of Website -----------------------------
 // GET login page
 router.get('/login', (req, res)=>{
    res.render('main/login');
 });
 
 // POST login
-router.post('/login', async (req, res)=>{
+router.post('/login' ,async (req, res)=>{
    const { username, password, category } = req.body;
-   const user = await User.findOne({username, category})
+
+   let user = undefined;
+
+   if(category === '0')
+      user = await Intermediary.findOne({username});
+
+
+   else if(category === '1')
+      user = await Doctor.findOne({ username });
+   //
+   // else
+   //    const user = await Patient.findOne({ username, category });
+
 
    if(user){
-      //console.log('User found');
       const isPasswordCorrect = await bcrypt.compare(password, user.password);
       if(isPasswordCorrect){
          console.log('Password is correct');
@@ -74,6 +105,12 @@ router.post('/login', async (req, res)=>{
 
 });
 
+// ----------------------------------------------------------------------
+
+
+
+// --------------------- Registration routes ----------------------------
+
 
 // GET register page
 router.get('/register', (req, res)=>{
@@ -81,30 +118,41 @@ router.get('/register', (req, res)=>{
 });
 
 
-// POST register page
-router.post('/register', userExists, async (req, res)=>{
+// GET register option page
+router.get('/register/registerOptions', (req, res)=>{
+   res.render('main/registerOptions');
+});
 
-   const {firstName, lastName, username, email, password, category} = req.body;
+
+// GET intermediary registration pages
+router.get('/register/registerOptions/intermediary', (req, res)=>{
+   res.render('main/registerOptions/intermediaryRegistration');
+});
+
+// POST intermediary registration
+router.post('/register/registerOptions/intermediary', intermediaryExists, async (req, res)=>{
+   const {firstName, lastName, username, email, password} = req.body;
+
+   const category = '0';
 
    // creating hash of password
    const hash = await bcrypt.hash(password, 12);
 
    // creating new user
-   const new_user = new User({
+   const new_intermediary = new Intermediary({
       firstName: firstName,
       lastName: lastName,
       username: username,
       email: email,
-      password: hash,
-      category: category
+      password: hash
    });
 
-   // saving user in database
-   await new_user.save()
+   // saving intermediary user in database
+   await new_intermediary.save()
        .then(()=>{
           console.log('User Created!');
-          req.session.user_id = new_user._id;
-          req.session.user = new_user;
+          req.session.user_id = new_intermediary._id;
+          req.session.user = new_intermediary;
           req.flash('success', 'Successfully Registered');
           res.redirect(`/bluebird/${categoryRedirect(category)}`);
 
@@ -117,10 +165,59 @@ router.post('/register', userExists, async (req, res)=>{
        })
 });
 
+
+// GET doctor registration pages
+router.get('/register/registerOptions/doctor', (req, res)=>{
+   res.render('main/registerOptions/doctorRegistration');
+});
+
+
+router.post('/register/registerOptions/doctor', doctorExists, async (req, res)=>{
+   const {firstName, lastName, username, email, password, speciality} = req.body;
+
+   const category = '1';
+
+   // creating hash of password
+   const hash = await bcrypt.hash(password, 12);
+
+   const specialityList = speciality.split(',');
+
+   // creating new user
+   const new_doctor = new Doctor({
+      firstName: firstName,
+      lastName: lastName,
+      username: username,
+      email: email,
+      password: hash,
+      speciality: specialityList
+   });
+
+   // saving doctor user in database
+   await new_doctor.save()
+       .then(()=>{
+          console.log('User Created!');
+          req.session.user_id = new_doctor._id;
+          req.session.user = new_doctor;
+          req.flash('success', 'Successfully Registered');
+          res.redirect(`/bluebird/${categoryRedirect(category)}`);
+
+       })
+       .catch(err => {
+          console.log('User cannot be created!');
+          console.log(err);
+          req.flash('error', 'Registration failed!');
+          res.redirect('/bluebird/register');
+       })
+});
+
+// ----------------------------------------------------------------------
+
+
 // logout
 router.get('/logout', (req, res)=>{
    req.session.destroy();
    res.redirect('/bluebird/login');
 });
+
 
 module.exports = router;

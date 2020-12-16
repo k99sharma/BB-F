@@ -4,44 +4,57 @@ const router = express.Router();
 const requireLogin = require('../utility/necessaryFunctions');
 
 // models
-const User = require('../models/users');
 const Appointment = require('../models/appointments');
+const Intermediary = require('../models/intermediary');
+const Doctor = require('../models/doctor');
 
 // functions
 const findIntermediary = async (id)=>{
-    const intermediary = await User.findById(id);
+    const intermediary = await Intermediary.findById(id);
 
     const intermediaryEmail = intermediary.email;
     const intermediaryId = intermediary._id;
     const intermediaryName = `${intermediary.firstName} ${intermediary.lastName}`;
 
     return {intermediaryId, intermediaryName, intermediaryEmail};
-}
+};
 
 const findDoctor = async (symptoms) => {
     // setting doctor according to symptoms
     // machine learning model is used here !!!!
-    const doctorList = ['doctorOne@email.com', 'doctor2@email.com', 'doctor3@email.com'];
-    let doctorAppointedEmail;
-    if(symptoms === 'cold')
-        doctorAppointedEmail = doctorList[0];
-
-    else if(symptoms === 'headache')
-        doctorAppointedEmail = doctorList[1];
-
-    else
-        doctorAppointedEmail = doctorList[2];
 
     let doctorId = undefined, doctorName = undefined, doctorEmail = undefined;
 
+    // getting symptoms
+    const symptomList = symptoms.split(',');
+
     // finding doctor
-    const doctor = await User.findOne({email : doctorAppointedEmail});
+    const doctors = await Doctor.find({});
+
+    let isGood = false;
+    let doctor = undefined;
+
+    for(let d of doctors){
+        let doctorSpeciality = d.speciality;
+
+        for(let symptom of symptomList){
+            for(let speciality of doctorSpeciality){
+                if(symptom === speciality){
+                    isGood = true;
+                    break;
+                }
+            }
+        }
+
+        if(isGood)
+            doctor = d;
+    }
 
     // if doctor is found
     if(doctor){
         doctorId = doctor._id;
         doctorName = `${doctor.firstName} ${doctor.lastName}`;
-        doctorEmail = doctorAppointedEmail;
+        doctorEmail = doctor.email;
     }
 
     else {
@@ -54,9 +67,50 @@ const findDoctor = async (symptoms) => {
 
 const getSymptomsArray = (symptoms) => {
     const array = symptoms.split(',');
-
     return array;
 }
+
+
+const setId = async (appointment) => {
+    const appointmentId = appointment._id;
+    const appointedDoctorId = appointment.doctor.id;
+    const intermediaryId = appointment.intermediary.id;
+
+    await Doctor.findOneAndUpdate(
+        {_id : appointedDoctorId},
+        {$push: {
+                    appointments: appointmentId
+            }
+        });
+
+    await Intermediary.findOneAndUpdate(
+        {_id : intermediaryId},
+        {$push: {
+                appointments: appointmentId
+            }
+        });
+};
+
+
+// middleware to remove id from doctor and intermediary as well on deleting appointment
+const rmDoctorIntermediary = async (req, res, next) => {
+    const {id} = req.params;
+    const appointment = await Appointment.findById(id);
+
+    await Doctor.updateOne({_id: appointment.doctor.id}, {
+        $pull: {
+            appointments: id
+        }
+    });
+
+    await Intermediary.updateOne({_id: appointment.intermediary.id}, {
+        $pull: {
+            appointments: id
+        }
+    });
+
+    next();
+};
 
 
 // GET Home
@@ -79,10 +133,6 @@ router.post('/newAppointment/:id', async (req, res)=>{
 
     // if doctor is available for current symptoms
     if(doctorId && doctorName && doctorEmail){
-        // console.log(doctorId);
-        // console.log(doctorName);
-        // console.log(doctorEmail);
-        // console.log(appointmentDate);
 
         // making appointment
         const new_appointment = new Appointment({
@@ -111,6 +161,7 @@ router.post('/newAppointment/:id', async (req, res)=>{
         await new_appointment.save()
             .then(()=>{
                 console.log('Appointment Done!');
+                setId(new_appointment);
                 req.flash('success', 'Appointment Made!');
                 return res.redirect('/bluebird/intermediary/home');
             })
@@ -130,7 +181,7 @@ router.post('/newAppointment/:id', async (req, res)=>{
 
 
 // GET show appointment
-router.get('/appointment/show', async (req, res)=>{
+router.get('/appointment/show', requireLogin, async (req, res)=>{
     const user_id = req.session.user_id;
 
     // finding all appointments in the database
@@ -151,7 +202,7 @@ router.put('/appointment/edit/:id', async (req, res)=>{
 });
 
 // DELETE existing appointment
-router.delete('/appointment/:id', async (req, res)=>{
+router.delete('/appointment/:id', rmDoctorIntermediary, async (req, res)=>{
    const {id} = req.params;
 
    await Appointment.findByIdAndDelete(id)

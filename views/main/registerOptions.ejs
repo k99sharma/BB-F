@@ -8,26 +8,27 @@
         <!-- Bootstrap CSS -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
 
-        <title>Bluebird | Doctor</title>
+        <title>Register Options</title>
     </head>
 
     <body>
         <div class="container m-3">
             <div class="container m-3">
-                <%- include('../partials/flash') %>
-                <h1>Doctor Homepage</h1>
+                <h1>Register Options</h1>
             </div>
 
             <div class="container m-3">
-                Welcome, <%= user.firstName %> <%= user.lastName %>
-            </div>
+                <div class="container m-3">
+                    <a href="/bluebird/register/registerOptions/intermediary" class="btn btn-primary">Intermediary Registration</a>
+                </div>
 
-            <div class="container m-3">
-                <a href="/bluebird/doctor/<%= user._id%>/todayAppointments" class="btn btn-success">Today Appointments</a>
-            </div>
+                <div class="container m-3">
+                    <a href="/bluebird/register/registerOptions/doctor" class="btn btn-warning">Doctor Registration</a>
+                </div>
 
-            <div class="container m-3">
-                <a href="/bluebird/logout" class="btn btn-danger">Logout</a>
+                <div class="container m-3">
+                    <a href="" class="btn btn-danger">Patient Registration</a>
+                </div>
             </div>
         </div>
 
