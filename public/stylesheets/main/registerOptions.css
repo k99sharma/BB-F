@@ -14,17 +14,17 @@ body{
     text-align: center;
 }
 
-
-#login-button{
+#signup-button{
     display: none;
 }
+
 
 #logout-button{
     display: none;
 }
 
 
-#form-card{
-    margin-top: 8%;
+#intermediaryOptions{
+    margin-top: 5%;
     max-width: 500px;
 }

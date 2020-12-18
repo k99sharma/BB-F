@@ -1,0 +1,29 @@
+*{
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+body{
+    background-color: #ebebeb;
+}
+
+.card-header{
+    background-color: #1c2b2d;
+    color: white;
+    text-align: center;
+}
+
+#signup-button{
+    display: none;
+}
+
+
+#logout-button{
+    display: none;
+}
+
+#register-options{
+    margin-top: 8%;
+    max-width: 500px;
+}
