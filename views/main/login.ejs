@@ -7,36 +7,56 @@
 
         <!-- Bootstrap CSS -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+        <link href="../stylesheets/main/login.css" type="text/css" rel="stylesheet">
 
         <title>Bluebird | Login</title>
     </head>
 
     <body>
+        <%- include('../partials/navbar') %>
+
         <div class="container m-3">
             <%- include('../partials/flash') %>
-            <h1>Bluebird Login</h1>
         </div>
 
-        <div class="container m-3">
-            <form action="/bluebird/login" method="POST">
-                <label for="username">Username</label>
-                <input id="username" type="text" name="username" placeholder="username"><br>
+        <div class="container" id="form-card">
+            <div class="card">
+                <div class="card-header">
+                    <h5><img src="../images/logo/blueBirdLogo.svg" width="50px" height="50px" alt="bluebird logo"> <span>Account Login</span></h5>
+                </div>
 
-                <label for="password">Password</label>
-                <input id="password" type="password" name="password" placeholder="password"><br>
+                <div class="card-body">
+                    <form action="/bluebird/login" method="POST">
+                        <div class="form-floating mb-3">
+                            <input type="username" class="form-control" name="username" id="username" placeholder="Username" required>
+                            <label for="username">Username</label>
+                        </div>
 
-                <label for="category">Category</label>
-                <select id="category" name="category">
-                    <option selected>Choose category</option>
-                    <option value="0">Intermediary</option>
-                    <option value="1">Doctor</option>
-                    <option value="2">Patient</option>
-                </select><br>
+                        <div class="form-floating mb-3">
+                            <input type="password" class="form-control" name="password" id="password" placeholder="Password" required>
+                            <label for="password">Password</label>
+                        </div>
 
-                <button type="submit" class="btn btn-success">Login</button>
-            </form>
+                        <div class="mb-3">
+                            <select class="form-select" name="category" aria-label="Default select example" required>
+                                <option selected>Select Category</option>
+                                <option value="0">Intermediary</option>
+                                <option value="1">Doctor</option>
+                                <option value="2">Patient</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <button type="submit" class="btn btn-outline-success">Login</button>
+                        </div>
+
+                    </form>
+                </div>
+
+            </div>
         </div>
 
+        
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
 
     </body>

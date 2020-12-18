@@ -7,6 +7,7 @@ const requireLogin = require('../utility/necessaryFunctions');
 const Appointment = require('../models/appointments');
 const Intermediary = require('../models/intermediary');
 const Doctor = require('../models/doctor');
+const Patient = require('../models/patient');
 
 // functions
 const findIntermediary = async (id)=>{
@@ -131,6 +132,8 @@ router.post('/newAppointment/:id', async (req, res)=>{
     // getting appointed doctor details
     const {doctorId, doctorName, doctorEmail} = await findDoctor(symptoms);
 
+    const bbAccount = (bluebirdAccount === 'on') ? true : false;
+
     // if doctor is available for current symptoms
     if(doctorId && doctorName && doctorEmail){
 
@@ -143,7 +146,7 @@ router.post('/newAppointment/:id', async (req, res)=>{
                 contactNumber: contact,
                 address: address,
             },
-            bluebirdAccount: (bluebirdAccount === 'on') ? true : false,
+            bluebirdAccount: bbAccount,
             doctor: {
                 id: doctorId,
                 name: doctorName,
@@ -159,9 +162,18 @@ router.post('/newAppointment/:id', async (req, res)=>{
         });
 
         await new_appointment.save()
-            .then(()=>{
+            .then(async (new_appointment)=>{
+                if(bbAccount){
+                    await Patient.findOneAndUpdate(
+                        {email : email},
+                        {$push: {
+                                appointments: new_appointment._id
+                            }
+                        });
+                }
+
                 console.log('Appointment Done!');
-                setId(new_appointment);
+                await setId(new_appointment);
                 req.flash('success', 'Appointment Made!');
                 return res.redirect('/bluebird/intermediary/home');
             })

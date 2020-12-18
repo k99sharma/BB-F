@@ -1,0 +1,27 @@
+*{
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+body{
+    background-color: #ebebeb;
+}
+
+.card-header{
+    background-color: #1c2b2d;
+    color: white;
+    text-align: center;
+}
+
+
+#login-button{
+    display: none;
+}
+
+
+
+#form-card{
+    margin-top: 8%;
+    max-width: 600px;
+}

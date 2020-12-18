@@ -7,6 +7,7 @@ const requireLogin = require('../utility/necessaryFunctions');
 const Doctor = require('../models/doctor');
 const Appointment = require('../models/appointments');
 const Prescription = require('../models/prescriptions');
+const Patient = require('../models/patient');
 
 // GET Home
 router.get('/home', requireLogin, (req, res)=>{
@@ -58,6 +59,12 @@ router.post('/:id/prescription', async (req, res)=>{
 
     if(prescription){
         await Appointment.findByIdAndUpdate(id, {isPrescribed: true});
+        await Patient.findOneAndUpdate(
+            {email : appointment.patient.email},
+            {$push: {
+                    prescription: prescription._id
+                }
+            });
 
         req.flash('success', 'Prescribed !');
         res.redirect(`/bluebird/doctor/${doctorId}/todayAppointments`);

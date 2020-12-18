@@ -7,6 +7,7 @@ const bcrypt = require('bcrypt');
 
 const Intermediary = require('../models/intermediary');
 const Doctor = require('../models/doctor');
+const Patient = require('../models/patient');
 
 
 // middleware to check before registration if a user already exists or not
@@ -30,6 +31,19 @@ const doctorExists = async (req, res, next) => {
    const doctor = await Doctor.findOne({username, email});
    if(doctor){
       console.log('Doctor already exists');
+      req.flash('error', 'Username and email already in use!');
+      return res.redirect('/bluebird/register');
+   }
+   else
+      next();
+}
+
+const patientExists = async (req, res, next) => {
+   const { username, email } = req.body;
+
+   const patient = await Patient.findOne({username, email});
+   if(patient){
+      console.log('Patient already exists');
       req.flash('error', 'Username and email already in use!');
       return res.redirect('/bluebird/register');
    }
@@ -76,9 +90,9 @@ router.post('/login' ,async (req, res)=>{
 
    else if(category === '1')
       user = await Doctor.findOne({ username });
-   //
-   // else
-   //    const user = await Patient.findOne({ username, category });
+
+   else
+      user = await Patient.findOne({ username });
 
 
    if(user){
@@ -209,6 +223,51 @@ router.post('/register/registerOptions/doctor', doctorExists, async (req, res)=>
           res.redirect('/bluebird/register');
        })
 });
+
+
+// GET patient registration
+router.get('/register/registerOptions/patient', (req, res)=>{
+   res.render('main/registerOptions/patientRegistration');
+});
+
+
+// POST patient registration
+router.post('/register/registerOptions/patient', patientExists, async (req, res)=>{
+   const {firstName, lastName, username, password, email, address, contact} = req.body;
+
+   const hash = await bcrypt.hash(password, 12);
+
+   const category = '2';
+
+   const new_patient = new Patient({
+      firstName : firstName,
+      lastName: lastName,
+      username: username,
+      email: email,
+      password: hash,
+      address: address,
+      contactNumber: contact
+   });
+
+   // saving doctor user in database
+   await new_patient.save()
+       .then(()=>{
+          console.log('User Created!');
+          req.session.user_id = new_patient._id;
+          req.session.user = new_patient;
+          req.flash('success', 'Successfully Registered');
+          res.redirect(`/bluebird/${categoryRedirect(category)}`);
+
+       })
+       .catch(err => {
+          console.log('User cannot be created!');
+          console.log(err);
+          req.flash('error', 'Registration failed!');
+          res.redirect('/bluebird/register');
+       })
+
+});
+
 
 // ----------------------------------------------------------------------
 
