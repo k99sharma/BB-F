@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    <link href="http://localhost:3000/stylesheets/intermediary/allAppointments.css" type="text/css" rel="stylesheet">
+
+
+    <title>Appointments</title>
+</head>
+
+    <body>
+    <%- include('../partials/navbar/navbar-intermediary') %>
+
+    <div class="container m-3">
+        <%- include('../partials/flash') %>
+    </div>
+
+
+    <div class="container m-5">
+        <!-- main heading -->
+        <div class="card" style="width: 22rem;" id="main-heading">
+            <div class="card-body">
+                <h2>Appointments History</h2>
+            </div>
+        </div>
+    </div>
+
+    <!-- appointment options -->
+    <div class="container m-5">
+        <!-- main heading of heading -->
+        <div class="card" style="width: 55rem;">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col">
+                        <h5>Patient Name</h5>
+                    </div>
+
+                    <div class="col">
+                        <h5>Appointment Date</h5>
+                    </div>
+
+                    <div class="col">
+
+                    </div>
+                </div>
+            </div>
+        </div><!-- main heading of card ends here -->
+
+        <!-- appointment data -->
+        <div class="card" style="width: 55rem;">
+            <div class="card-body" id="appointment-data">
+                <% for(let appointment of appointments){ %>
+                    <div class="row m-2 p-2">
+                        <div class="col">
+                            <h5><%= appointment.patient.firstName %> <%= appointment.patient.lastName %></h5>
+                        </div>
+
+                        <div class="col">
+                            <h5><%= appointment.appointmentDate %></h5>
+                        </div>
+
+                        <div class="col">
+                            <!-- Appointment Check Button trigger modal -->
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#appointment-<%= appointment._id %>">
+                                Details
+                            </button>
+
+                            <!-- appointment details modal -->
+                            <div class="modal fade" id="appointment-<%= appointment._id %>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header appointment-data-modal">
+                                            <h5 class="modal-title" id="exampleModalLabel">Appointment Details</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <!-- Patient Name -->
+                                            <div class="row">
+                                                <div class="col">
+                                                    <h5>Patient Name</h5>
+                                                </div>
+
+                                                <div class="col">
+                                                    <p><strong><%= appointment.patient.firstName %> <%= appointment.patient.lastName %></strong></p>
+                                                </div>
+                                            </div>
+
+                                            <!-- Patient Email -->
+                                            <div class="row">
+                                                <div class="col">
+                                                    <h5>Patient Email</h5>
+                                                </div>
+
+                                                <div class="col">
+                                                    <p><strong><%= appointment.patient.email %></strong></p>
+                                                </div>
+                                            </div>
+
+                                            <!-- Patient Contact Number -->
+                                            <div class="row">
+                                                <div class="col">
+                                                    <h5>Patient Contact</h5>
+                                                </div>
+
+                                                <div class="col">
+                                                    <p><strong><%= appointment.patient.contactNumber %></strong></p>
+                                                </div>
+                                            </div>
+
+                                            <!-- Patient Address -->
+                                            <div class="row">
+                                                <div class="col">
+                                                    <h5>Patient Address</h5>
+                                                </div>
+
+                                                <div class="col">
+                                                    <p><strong><%= appointment.patient.address %></strong></p>
+                                                </div>
+                                            </div>
+
+                                            <!-- Patient Symptoms -->
+                                            <div class="row">
+                                                <div class="col">
+                                                    <h5>Patient Symptoms</h5>
+                                                </div>
+
+                                                <div class="col">
+                                                    <ul>
+                                                        <% for(let symptom of appointment.symptoms){ %>
+                                                            <li> <%= symptom %> </li>
+                                                        <% } %>
+                                                    </ul>
+                                                </div>
+                                            </div>
+
+                                            <!-- doctor name -->
+                                            <div class="row">
+                                                <div class="col">
+                                                    <h5>Doctor Name</h5>
+                                                </div>
+
+                                                <div class="col">
+                                                    <p><strong><%= appointment.doctor.name %></strong></p>
+                                                </div>
+                                            </div>
+
+                                            <!-- doctor emails -->
+                                            <div class="row">
+                                                <div class="col">
+                                                    <h5>Doctor Emails</h5>
+                                                </div>
+
+                                                <div class="col">
+                                                    <p><strong><%= appointment.doctor.email %></strong></p>
+                                                </div>
+                                            </div>
+
+                                            <!-- Patient Bluebird -->
+                                            <div class="row">
+                                                <div class="col">
+                                                    <h5>Patient Bluebird</h5>
+                                                </div>
+
+                                                <div class="col">
+                                                    <p> <%= (appointment.bluebirdAccount)?'Available':'Not Available' %> </p>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><!-- appointment details modal ends here -->
+                        </div>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+
+
+    </div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+</body>
+</html>

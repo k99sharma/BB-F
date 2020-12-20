@@ -229,4 +229,15 @@ router.delete('/appointment/:id', rmDoctorIntermediary, async (req, res)=>{
        })
 });
 
+
+// GET all appointments
+router.get('/appointment/:id/all', requireLogin, async (req, res)=>{
+    const {id} = req.params;
+
+    const appointments = await Appointment.find({'intermediary.id' : id});
+
+    res.render('intermediary/allAppointments', { appointments });
+});
+
+
 module.exports = router;

@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- Bootstrap CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+        <link href="http://localhost:3000/stylesheets/doctor/patient_AH.css" rel="stylesheet" type="text/css">
+
+        <title>Prescription Details</title>
+    </head>
+
+
+    <body>
+        <%- include('../partials/navbar/navbar-doctor') %>
+
+        <div class="container m-3">
+            <%- include('../partials/flash') %>
+        </div>
+
+        <div class="container m-5">
+            <div class="card-header" id="main-heading">
+                <h5>Prescription Details</h5>
+            </div>
+
+            <div class="card" id="prescription-card">
+                <div class="card-body" id="prescription-card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col">
+                                    <h5>Patient Name</h5>
+                                </div>
+
+                                <div class="col">
+                                    <p><%= appointment.patient.firstName %> <%= appointment.patient.lastName %></p>
+                                </div>
+                            </div>
+                        </li>
+
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col">
+                                    <h5>Patient Email</h5>
+                                </div>
+
+                                <div class="col">
+                                    <p><%= appointment.patient.email %></p>
+                                </div>
+                            </div>
+                        </li>
+
+
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col">
+                                    <h5>Patient Contact</h5>
+                                </div>
+
+                                <div class="col">
+                                    <p><%= appointment.patient.contactNumber %></p>
+                                </div>
+                            </div>
+                        </li>
+
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col">
+                                    <h5>Patient Address</h5>
+                                </div>
+
+                                <div class="col">
+                                    <p><%= appointment.patient.address %></p>
+                                </div>
+                            </div>
+                        </li>
+
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col">
+                                    <h5>Described Symptoms</h5>
+                                </div>
+
+                                <div class="col">
+                                    <ul>
+                                        <% for(let symptom of appointment.symptoms){ %>
+                                            <li><%= symptom %></li>
+                                        <% } %>
+                                    </ul>
+                                </div>
+                            </div>
+                        </li>
+
+
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col">
+                                    <h5>Appointment Date</h5>
+                                </div>
+
+                                <div class="col">
+                                    <p><%= appointment.appointmentDate %> - <%= appointment.appointmentTime %></p>
+                                </div>
+                            </div>
+                        </li>
+
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col">
+                                    <h5>Patient Contact</h5>
+                                </div>
+
+                                <div class="col">
+                                    <p><%= appointment.patient.contactNumber %></p>
+                                </div>
+                            </div>
+                        </li>
+
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col">
+                                    <h5>Symptoms</h5>
+                                </div>
+
+                                <div class="col">
+                                    <ul>
+                                        <% for(let symptom of prescription.symptoms){ %>
+                                            <li><%= symptom %></li>
+                                        <% } %>
+                                    </ul>
+                                </div>
+                            </div>
+                        </li>
+
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col">
+                                    <h5>Diagnosis</h5>
+                                </div>
+
+                                <div class="col">
+                                    <p><%= prescription.diagnosis %></p>
+                                </div>
+                            </div>
+                        </li>
+
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col">
+                                    <h5>Medicines</h5>
+                                </div>
+
+                                <div class="col">
+                                    <p><%= prescription.medicines %></p>
+                                </div>
+                            </div>
+                        </li>
+
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col">
+                                    <h5>Tips</h5>
+                                </div>
+
+                                <div class="col">
+                                    <p><%= prescription.tips %></p>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+    </body>
+</html>

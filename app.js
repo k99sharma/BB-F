@@ -7,6 +7,7 @@ const mongoose = require('mongoose');
 const session = require('express-session');
 const flash = require('connect-flash');
 const methodOverride = require('method-override');
+const favicon = require('serve-favicon');
 
 
 // mongodb database

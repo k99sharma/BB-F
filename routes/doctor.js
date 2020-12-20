@@ -20,11 +20,11 @@ router.get('/home', requireLogin, (req, res)=>{
 router.get('/:id/todayAppointments', requireLogin, async (req, res)=>{
     const {id} = req.params;
 
-    await Doctor.findOne({'_id': id})
+    await Appointment.find({'doctor.id': id, 'isPrescribed' : false})
         .populate('appointments')
-        .exec((err, doctor)=>{
+        .exec((err, appointments)=>{
             if(!err){
-                res.render('doctor/allAppointments', {doctor});
+                res.render('doctor/allAppointments', { appointments });
             }
 
             else{
@@ -34,7 +34,6 @@ router.get('/:id/todayAppointments', requireLogin, async (req, res)=>{
             }
         })
 });
-
 
 
 // POST prescription
@@ -51,18 +50,21 @@ router.post('/:id/prescription', async (req, res)=>{
         medicines: medicines.split(','),
         tips: tips.split(','),
         doctor: {
-            id: doctorId
+            id: doctorId,
+            appointmentId: id
         }
     });
 
     await prescription.save();
 
     if(prescription){
-        await Appointment.findByIdAndUpdate(id, {isPrescribed: true});
+        await Appointment.findByIdAndUpdate(id, {
+            isPrescribed: true
+        });
         await Patient.findOneAndUpdate(
             {email : appointment.patient.email},
             {$push: {
-                    prescription: prescription._id
+                    prescriptions: prescription._id
                 }
             });
 
@@ -77,6 +79,44 @@ router.post('/:id/prescription', async (req, res)=>{
     }
 });
 
+
+// GET appointment history
+router.get('/:id/appointmentHistory', requireLogin, async (req, res)=>{
+    const { id } = req.params;          // doctor id
+
+    await Doctor.findById(id)
+        .populate('appointments')
+        .exec((err, doctor) => {
+            if(!err){
+                const appointments = doctor.appointments;
+                res.render('doctor/appointmentHistory', { appointments });
+            }
+
+            else{
+                req.flash('error', 'Unable to retrieve data');
+                req.redirect('/bluebird/doctor/home');
+            }
+        })
+
+
+});
+
+
+// GET particular appointment history
+router.get('/appointmentHistory/:id', requireLogin, async (req, res)=>{
+    const { id } = req.params;           // appointment id
+
+    const appointment = await Appointment.findById(id);
+    const prescription = await Prescription.findOne({'doctor.appointmentId' : id});
+
+    if(prescription && appointment)
+        res.render('doctor/patientAH', {appointment, prescription});
+
+    else{
+        req.flash('error', 'Unable to retrieve the data');
+        res.redirect(`/bluebird/doctor/${appointment.doctor.id}/appointmentHistory`)
+    }
+});
 
 
 module.exports = router;

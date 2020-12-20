@@ -23,6 +23,9 @@ const prescriptionSchema = new Schema({
     doctor: {
         id: {
             type: mongoose.Schema.Types.ObjectId
+        },
+        appointmentId: {
+            type: mongoose.Schema.Types.ObjectId
         }
     },
     patient: {

@@ -1,0 +1,32 @@
+*{
+    border: 0;
+    margin: 0;
+    padding: 0;
+}
+
+body{
+    background-color: #ebebeb;
+}
+
+#login-button{
+    display: none;
+}
+
+#signup-button{
+    display: none;
+}
+
+#appointments{
+    width: 50rem;
+}
+
+.accordion-body{
+    background-color: white;
+}
+
+
+.card-header{
+    background-color: #1c2b2d;
+    color: white;
+    text-align: center;
+}

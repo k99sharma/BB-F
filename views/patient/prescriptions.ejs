@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- Bootstrap CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+        <link href="http://localhost:3000/stylesheets/patient/prescriptions.css" rel="stylesheet" type="text/css">
+
+        <title>Bluebird | Patient</title>
+    </head>
+
+    <body>
+        <%- include('../partials/navbar/navbar-patient') %>
+
+        <div class="container my-3">
+            <%- include('../partials/flash') %>
+        </div>
+
+        <div class="container my-5">
+            <div class="card" id="main-heading">
+                <div class="card-header" >
+                    <h5>Prescriptions</h5>
+                </div>
+            </div>
+        </div>
+
+        <div class="container my-5">
+            <div class="card" id="prescription-details">
+                <div class="card-header" id="prescription-card-heading">
+                    <div class="row">
+                        <div class="col">
+                            <h5>Date of Appointment</h5>
+                        </div>
+
+                        <div class="col">
+                            <h5>Doctor Name</h5>
+                        </div>
+
+                        <div class="col">
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <% for(let appointment of appointments){ %>
+                        <div class="row">
+                            <div class="col">
+                                <h5><%= appointment.appointmentDate %></h5>
+                            </div>
+
+                            <div class="col">
+                                <h5><%= appointment.doctor.name %></h5>
+                            </div>
+
+                            <div class="col">
+                                <a href="/bluebird/patient/prescriptions/<%= appointment._id %>" class="btn btn-primary">Details</a>
+                            </div>
+
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+    </body>
+</html>
