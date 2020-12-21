@@ -74,16 +74,6 @@
 
                                     <div class="row">
                                         <div class="col">
-                                            <p><strong>Appointment Time</strong></p>
-                                        </div>
-
-                                        <div class="col">
-                                            <p><%= appointment.appointmentTime %></p>
-                                        </div>
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="col">
                                             <p><strong>Patient Symptoms</strong></p>
                                         </div>
 
@@ -183,8 +173,33 @@
                                                             <form action="/bluebird/intermediary/appointment/edit/<%= appointment._id %>?_method=PUT" method="POST">
                                                                 <!-- data to change -->
                                                                 <div class="mb-3">
-                                                                    <label for="email" class="form-label">Trail Email Address</label>
-                                                                    <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com">
+                                                                    <label for="firstName" class="form-label">First Name</label>
+                                                                    <input type="text" class="form-control" id="firstName" name="firstName" placeholder="<%= appointment.patient.firstName %>">
+                                                                </div>
+
+                                                                <div class="mb-3">
+                                                                    <label for="lastName" class="form-label">Last Name</label>
+                                                                    <input type="text" class="form-control" id="lastName" name="lastName" placeholder="<%= appointment.patient.lastName %>">
+                                                                </div>
+
+                                                                <div class="mb-3">
+                                                                    <label for="email" class="form-label">Email Address</label>
+                                                                    <input type="email" class="form-control" id="email" name="email" placeholder="<%= appointment.patient.email%>">
+                                                                </div>
+
+                                                                <div class="mb-3">
+                                                                    <label for="contact" class="form-label">Contact Number</label>
+                                                                    <input type="text" class="form-control" id="contact" name="contact" placeholder="<%= appointment.patient.contactNumber %>">
+                                                                </div>
+
+                                                                <div class="mb-3">
+                                                                    <label for="address" class="form-label">Address</label>
+                                                                    <input type="text" class="form-control" id="address" name="address" placeholder="<%= appointment.patient.address %>">
+                                                                </div>
+
+                                                                <div class="form-check mb-3">
+                                                                    <input class="form-check-input" type="checkbox" name="bluebirdAccount" id="bluebirdAccount">
+                                                                    <label class="form-check-label" for="bluebirdAccount">Bluebird Account</label>
                                                                 </div>
 
                                                                 <div class="modal-footer">
@@ -210,9 +225,10 @@
                     <% } %>
                 </div>
             </div>
-
-
         </div>
+
+        <%- include('../partials/footer') %>
+
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
     </body>
 </html>

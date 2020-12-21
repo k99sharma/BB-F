@@ -124,7 +124,7 @@ router.get('/home', requireLogin, (req, res)=>{
 // POST New Appointment
 router.post('/newAppointment/:id', async (req, res)=>{
     const {id} = req.params;
-    const {firstName, lastName, email, contact, address, symptoms, bluebirdAccount = "off", appointmentDate} = req.body;
+    const {firstName, lastName, email, contact, address, symptoms, date, bluebirdAccount = "off"} = req.body;
 
     // getting intermediary details
     const {intermediaryId, intermediaryName, intermediaryEmail} = await findIntermediary(id);
@@ -157,7 +157,7 @@ router.post('/newAppointment/:id', async (req, res)=>{
                 name: intermediaryName,
                 email: intermediaryEmail
             },
-            appointmentDate: appointmentDate,
+            appointmentDate: date,
             symptoms: getSymptomsArray(symptoms)
         });
 
@@ -206,11 +206,31 @@ router.get('/appointment/show', requireLogin, async (req, res)=>{
 // PUT edit existing appointment
 router.put('/appointment/edit/:id', async (req, res)=>{
     const {id} = req.params;
-    const {email} = req.body;
+    const {firstName, lastName, email, contact, address, bluebirdAccount} = req.body;
 
-    console.log(email);
+    const bbAccount = (bluebirdAccount === 'on') ? true : false;
 
-    res.send('Editing');
+    await Appointment.findByIdAndUpdate(id, {
+        patient: {
+            firstName: firstName,
+            lastName: lastName,
+            email: email,
+            contactNumber: contact,
+            address: address,
+        },
+        bluebirdAccount: bbAccount
+    })
+        .exec((err, edited_appointment)=>{
+            if(!err){
+                req.flash('success', 'Appointment details is successfully changed!');
+                res.redirect('/bluebird/intermediary/appointment/show');
+            }
+
+            else{
+                req.flash('error', 'Appointment details cannot be edited !');
+                res.redirect('/bluebird/intermediary/appointment/show');
+            }
+        });
 });
 
 // DELETE existing appointment
