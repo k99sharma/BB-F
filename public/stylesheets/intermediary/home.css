@@ -1,0 +1,47 @@
+*{
+    border: 0;
+    margin: 0;
+    padding: 0;
+}
+
+body{
+    background-color: #ebebeb;
+}
+
+#login-button{
+    display: none;
+}
+
+#signup-button{
+    display: none;
+}
+
+hr{
+    width: 800px;
+}
+
+.card-header{
+    background-color: #1c2b2d;
+    color: white;
+    text-align: center;
+}
+
+.card {
+    width: 19rem;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    text-align: center;
+}
+
+.modal-header{
+    background-color: #0278ae;
+    color: white;
+    text-align: center;
+}
+
+.modal-body{
+    background-color: #ebebeb;
+}
+
+
+
+

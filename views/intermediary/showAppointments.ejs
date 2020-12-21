@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    <link href="http://localhost:3000/stylesheets/intermediary/showAppointments.css" type="text/css" rel="stylesheet">
+    <link rel="shortcut icon" type="image/jpg" href="http://localhost:3000/fav.png">
+
+
+    <title>Appointments</title>
+</head>
+
+    <body>
+        <%- include('../partials/navbar/navbar-intermediary') %>
+
+        <div class="container m-3">
+            <%- include('../partials/flash') %>
+        </div>
+
+        <div class="container m-5">
+            <div class="container m-3">
+                <div class="card" style="width: 22rem;">
+                    <div class="card-header">
+                        <h3>Upcoming Appointments</h3>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container mt-5 m-3">
+                <div class="accordion" id="appointments">
+                    <% for(let appointment of appointments){ %>
+
+                        <!-- accordion item -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <a class="btn accordion-button" data-bs-toggle="collapse" role="button" href="#allAppointments-<%= appointment._id %>">
+                                    <strong><%= appointment.patient.firstName %> <%= appointment.patient.lastName %></strong>
+                                </a>
+                            </h2>
+                            <div id="allAppointments-<%= appointment._id %>" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+                                    <div class="row">
+                                        <div class="col">
+                                            <p><strong>Patient Name</strong></p>
+                                        </div>
+
+                                        <div class="col">
+                                            <p><%= appointment.patient.firstName %> <%= appointment.patient.lastName %></p>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col">
+                                            <p><strong>Patient Email</strong></p>
+                                        </div>
+
+                                        <div class="col">
+                                            <p><%= appointment.patient.email %></p>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col">
+                                            <p><strong>Appointment Date</strong></p>
+                                        </div>
+
+                                        <div class="col">
+                                            <p><%= appointment.appointmentDate %></p>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col">
+                                            <p><strong>Patient Symptoms</strong></p>
+                                        </div>
+
+                                        <div class="col">
+                                            <% for(let symptom of appointment.symptoms){ %>
+                                                <li><strong> <%= symptom %> </strong></li>
+                                            <% } %>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col">
+                                            <p><strong>Patient Contact Number</strong></p>
+                                        </div>
+
+                                        <div class="col">
+                                            <p><%= appointment.patient.contactNumber %></p>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col">
+                                            <p><strong>Patient Address</strong></p>
+                                        </div>
+
+                                        <div class="col">
+                                            <p><%= appointment.patient.address %></p>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col">
+                                            <p><strong>Bluebird Account</strong></p>
+                                        </div>
+
+                                        <div class="col">
+                                            <p><%= ( appointment.bluebirdAccount )? 'Available' : 'Not Available' %></p>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col">
+                                            <p><strong>Doctor Appointed</strong></p>
+                                        </div>
+
+                                        <div class="col">
+                                            <p><%= appointment.doctor.name %></p>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col">
+                                            <p><strong>Doctor Email</strong></p>
+                                        </div>
+
+                                        <div class="col">
+                                            <p><%= appointment.doctor.email %></p>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col">
+                                            <p><strong>Intermediary Name</strong></p>
+                                        </div>
+
+                                        <div class="col">
+                                            <p><%= appointment.intermediary.name %></p>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col">
+                                            <p><strong>Intermediary Email</strong></p>
+                                        </div>
+
+                                        <div class="col">
+                                            <p><%= appointment.intermediary.email %></p>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mt-2">
+                                        <div class="col">
+                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editAppointment-<%= appointment._id %>">
+                                                Edit
+                                            </button>
+
+                                            <!-- edit modal -->
+                                            <!-- Modal -->
+                                            <div class="modal fade" id="editAppointment-<%= appointment._id %>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="exampleModalLabel">Edit Appointment</h5>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <!-- editing form -->
+                                                            <form action="/bluebird/intermediary/appointment/edit/<%= appointment._id %>?_method=PUT" method="POST">
+                                                                <!-- data to change -->
+                                                                <div class="mb-3">
+                                                                    <label for="firstName" class="form-label">First Name</label>
+                                                                    <input type="text" class="form-control" id="firstName" name="firstName" placeholder="<%= appointment.patient.firstName %>">
+                                                                </div>
+
+                                                                <div class="mb-3">
+                                                                    <label for="lastName" class="form-label">Last Name</label>
+                                                                    <input type="text" class="form-control" id="lastName" name="lastName" placeholder="<%= appointment.patient.lastName %>">
+                                                                </div>
+
+                                                                <div class="mb-3">
+                                                                    <label for="email" class="form-label">Email Address</label>
+                                                                    <input type="email" class="form-control" id="email" name="email" placeholder="<%= appointment.patient.email%>">
+                                                                </div>
+
+                                                                <div class="mb-3">
+                                                                    <label for="contact" class="form-label">Contact Number</label>
+                                                                    <input type="text" class="form-control" id="contact" name="contact" placeholder="<%= appointment.patient.contactNumber %>">
+                                                                </div>
+
+                                                                <div class="mb-3">
+                                                                    <label for="address" class="form-label">Address</label>
+                                                                    <input type="text" class="form-control" id="address" name="address" placeholder="<%= appointment.patient.address %>">
+                                                                </div>
+
+                                                                <div class="form-check mb-3">
+                                                                    <input class="form-check-input" type="checkbox" name="bluebirdAccount" id="bluebirdAccount">
+                                                                    <label class="form-check-label" for="bluebirdAccount">Bluebird Account</label>
+                                                                </div>
+
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                                    <button type="submit" class="btn btn-warning">Save changes</button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- edit modal ends here -->
+
+                                            <form class="form-inline mt-2" action="/bluebird/intermediary/appointment/<%= appointment._id %>?_method=DELETE" method="POST">
+                                                <button type="submit" class="btn btn-danger">Delete</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!-- accordion item ends here -->
+
+                    <% } %>
+                </div>
+            </div>
+        </div>
+
+        <%- include('../partials/footer') %>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+    </body>
+</html>

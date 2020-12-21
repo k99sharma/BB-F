@@ -1,0 +1,35 @@
+*{
+    border: 0;
+    margin: 0;
+    padding: 0;
+}
+
+body{
+    background-color: #ebebeb;
+}
+
+.container{
+    width: 19rem;
+}
+
+#login-button{
+    display: none;
+}
+
+#signup-button{
+    display: none;
+}
+
+#main-heading {
+    width: 50rem;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    text-align: center;
+    background-color: #1c2b2d;
+    color: white;
+}
+
+#prescription-card{
+    width: 50rem;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    text-align: center;
+}

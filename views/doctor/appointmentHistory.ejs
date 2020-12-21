@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- Bootstrap CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+        <link href="http://localhost:3000/stylesheets/doctor/appointmentHistory.css" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" type="image/jpg" href="http://localhost:3000/fav.png">
+
+
+        <title>Appointments History</title>
+    </head>
+
+
+    <body>
+        <%- include('../partials/navbar/navbar-doctor') %>
+
+        <div class="container m-3">
+            <%- include('../partials/flash') %>
+        </div>
+
+        <div class="container m-5">
+            <div class="card" id="main-heading">
+                <div class="card-body">
+                    <h5>Prescription History</h5>
+                </div>
+            </div>
+        </div>
+
+        <div class="container m-5">
+            <div class="card" id="patient-card">
+                <!-- patient card title -->
+                <div class="card-header" id="patient-card-header">
+                    <div class="row">
+                        <div class="col">
+                            <h5>Patient Name</h5>
+                        </div>
+
+                        <div class="col">
+
+                        </div>
+                    </div>
+                </div><!-- patient card title card ends here -->
+
+                <!-- patient card body -->
+                <div class="card-body" id="patient-card-body">
+                    <ul class="list-group list-group-flush">
+                        <% for(let appointment of appointments){ %>
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col">
+                                        <%= appointment.patient.firstName%> <%= appointment.patient.lastName %>
+                                    </div>
+
+                                    <div class="col">
+                                        <a href="/bluebird/doctor/appointmentHistory/<%= appointment._id %>" class="btn btn-success">Prescription</a>
+                                    </div>
+                                </div>
+                            </li>
+                        <% } %>
+                    </ul>
+                </div><!-- patient card body ends here -->
+            </div>
+        </div>
+
+        <%- include('../partials/footer') %>
+
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+    </body>
+</html>
