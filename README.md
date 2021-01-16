@@ -4,7 +4,8 @@ BBF-Online Prescription Website
 
 ## To run:
 
-npm modules are installed already!
+Install the modules:
+  npm install
 
 Run command:
   npm run start 
